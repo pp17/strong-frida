@@ -68,3 +68,4 @@ dist/
 *.pyi
 package/*
 ._*
+frida/

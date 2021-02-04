@@ -19,7 +19,7 @@ releng/devkit.py frida-gumjs macos-x86_64 build/CFrida/macos-x86_64-gumjs
 releng/devkit.py frida-gumjs macos-arm64 build/CFrida/macos-arm64-gumjs
 releng/devkit.py frida-gumjs macos-arm64e build/CFrida/macos-arm64e-gumjs
 
-eleng/devkit.py frida-core macos-x86_64 frida-swift/CFrida/
+releng/devkit.py frida-core macos-x86_64 frida-swift/CFrida/
 cd frida-swift
 xcodebuild -project Frida.xcodeproj -target Frida ARCHS=x86_64 ONLY_ACTIVE_ARCH=YES  -configuration Release
 cd build/Release && tar cJf ../frida-swift-macos-universal.tar.xz .

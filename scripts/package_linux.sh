@@ -1,10 +1,10 @@
 pushd frida
-xz frida/build/frida-linux-x86/bin/frida-server
-xz frida/build/frida-linux-x86_64/bin/frida-server
-xz frida/build/frida-linux-x86/bin/frida-inject
-xz frida/build/frida-linux-x86_64/bin/frida-inject
-xz frida/build/frida-linux-x86/lib/frida-gadget.so
-xz frida/build/frida-linux-x86_64/lib/frida-gadget.so
+xz build/frida-linux-x86/bin/frida-server
+xz build/frida-linux-x86_64/bin/frida-server
+xz build/frida-linux-x86/bin/frida-inject
+xz build/frida-linux-x86_64/bin/frida-inject
+xz build/frida-linux-x86/lib/frida-gadget.so
+xz build/frida-linux-x86_64/lib/frida-gadget.so
 
 releng/devkit.py frida-core linux-x86 build/CFrida/linux-x86-core
 releng/devkit.py frida-core linux-x86_64 build/CFrida/linux-x86_64-core

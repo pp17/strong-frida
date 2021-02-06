@@ -1,5 +1,9 @@
 # strong-frida Change Log
 
+## version 1.11
+
+- upgrade linux/android build runner to Ubuntu20.04.
+
 ## version 1.10
 
 - update swift bindings build.

@@ -19,9 +19,15 @@ releng/devkit.py frida-gumjs macos-x86_64 build/CFrida/macos-x86_64-gumjs
 releng/devkit.py frida-gumjs macos-arm64 build/CFrida/macos-arm64-gumjs
 releng/devkit.py frida-gumjs macos-arm64e build/CFrida/macos-arm64e-gumjs
 
-releng/devkit.py frida-core macos-x86_64 frida-swift/CFrida/
-cd frida-swift
-xcodebuild -project Frida.xcodeproj -target Frida ARCHS=x86_64 ONLY_ACTIVE_ARCH=YES  -configuration Release
+releng/devkit.py frida-core macos-x86_64 frida-swift/CFrida/macos-x86_64/
+releng/devkit.py frida-core macos-arm64 frida-swift/CFrida/macos-arm64/
+cd frida-swift/CFrida/
+mv macos-x86_64/frida-core.h .
+lipo -create macos-x86_64/libfrida-core.a macos-arm64/libfrida-core.a -output libfrida-core.a
+rm -rf macos-x86_64 macos-arm64
+cd ..
+xcodebuild
+# xcodebuild -project Frida.xcodeproj -target Frida ARCHS=x86_64 ONLY_ACTIVE_ARCH=YES  -configuration Release
 cd build/Release && tar cJf ../frida-swift-macos-universal.tar.xz .
 popd
 

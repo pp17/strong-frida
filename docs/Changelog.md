@@ -1,5 +1,9 @@
 # strong-frida Change Log
 
+## version 1.10
+
+- update swift bindings build.
+
 ## version 1.9
 
 - clean code by using build & package scripts.

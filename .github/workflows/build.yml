@@ -132,67 +132,17 @@ jobs:
         run: |
           git config --global user.name '${{ needs.release.outputs.user_name }}'
           git config --global user.email '${{ needs.release.outputs.user_email }}'
-          export ANDROID_NDK_ROOT=${{ steps.setup-ndk.outputs.ndk-path }}
           git clone --recurse-submodules https://github.com/frida/frida
-          cd frida/frida-core
-          git am ../../patch/frida-core/*.patch
-          cd ../
-          make core-android-arm
-          make core-android-arm64
-          make core-android-x86
-          make core-android-x86_64
-          make gum-android-arm
-          make gum-android-arm64
-          make gum-android-x86
-          make gum-android-x86_64
+          source scripts/patch_frida.sh
+          export ANDROID_NDK_ROOT=${{ steps.setup-ndk.outputs.ndk-path }}
+          source scripts/build_android.sh
 
       - name: package build result for Android
         shell: bash
         id: strong_frida_android
         run: |
           # tree -f frida/build
-          xz frida/build/frida-android-arm/bin/frida-server
-          xz frida/build/frida-android-arm64/bin/frida-server
-          xz frida/build/frida-android-x86/bin/frida-server
-          xz frida/build/frida-android-x86_64/bin/frida-server
-          xz frida/build/frida-android-arm/bin/frida-inject
-          xz frida/build/frida-android-arm64/bin/frida-inject
-          xz frida/build/frida-android-x86/bin/frida-inject
-          xz frida/build/frida-android-x86_64/bin/frida-inject
-          xz frida/build/frida-android-arm/lib/frida-gadget.so
-          xz frida/build/frida-android-arm64/lib/frida-gadget.so
-          xz frida/build/frida-android-x86/lib/frida-gadget.so
-          xz frida/build/frida-android-x86_64/lib/frida-gadget.so
-
-          cd ${{ github.workspace }}/frida
-          releng/devkit.py frida-core android-arm build/CFrida/android-arm-core
-          releng/devkit.py frida-core android-arm64 build/CFrida/android-arm64-core
-          releng/devkit.py frida-core android-x86 build/CFrida/android-x86-core
-          releng/devkit.py frida-core android-x86_64 build/CFrida/android-x86_64-core
-          releng/devkit.py frida-gum android-arm build/CFrida/android-arm-gum
-          releng/devkit.py frida-gum android-arm64 build/CFrida/android-arm64-gum
-          releng/devkit.py frida-gum android-x86 build/CFrida/android-x86-gum
-          releng/devkit.py frida-gum android-x86_64 build/CFrida/android-x86_64-gum
-          releng/devkit.py frida-gumjs android-arm build/CFrida/android-arm-gumjs
-          releng/devkit.py frida-gumjs android-arm64 build/CFrida/android-arm64-gumjs
-          releng/devkit.py frida-gumjs android-x86 build/CFrida/android-x86-gumjs
-          releng/devkit.py frida-gumjs android-x86_64 build/CFrida/android-x86_64-gumjs
-
-          cd ${{ github.workspace }}
-          cd frida/build/CFrida/android-arm-core && tar cJf ../android-arm-core.tar.xz . && cd '${{ github.workspace }}'
-          cd frida/build/CFrida/android-arm-gum && tar cJf ../android-arm-gum.tar.xz . && cd '${{ github.workspace }}'
-          cd frida/build/CFrida/android-arm-gumjs && tar cJf ../android-arm-gumjs.tar.xz . && cd '${{ github.workspace }}'
-          cd frida/build/CFrida/android-arm64-core && tar cJf ../android-arm64-core.tar.xz . && cd '${{ github.workspace }}'
-          cd frida/build/CFrida/android-arm64-gum && tar cJf ../android-arm64-gum.tar.xz . && cd '${{ github.workspace }}'
-          cd frida/build/CFrida/android-arm64-gumjs && tar cJf ../android-arm64-gumjs.tar.xz . && cd '${{ github.workspace }}'
-          cd frida/build/CFrida/android-x86-core && tar cJf ../android-x86-core.tar.xz . && cd '${{ github.workspace }}'
-          cd frida/build/CFrida/android-x86-gum && tar cJf ../android-x86-gum.tar.xz . && cd '${{ github.workspace }}'
-          cd frida/build/CFrida/android-x86-gumjs && tar cJf ../android-x86-gumjs.tar.xz . && cd '${{ github.workspace }}'
-          cd frida/build/CFrida/android-x86_64-core && tar cJf ../android-x86_64-core.tar.xz . && cd '${{ github.workspace }}'
-          cd frida/build/CFrida/android-x86_64-gum && tar cJf ../android-x86_64-gum.tar.xz . && cd '${{ github.workspace }}'
-          cd frida/build/CFrida/android-x86_64-gumjs && tar cJf ../android-x86_64-gumjs.tar.xz . && cd '${{ github.workspace }}'
-
-          # tree -f frida/build/CFrida
+          source scripts/package_android.sh
 
           echo ::set-output name=frida_server_android_arm::'${{ github.workspace }}/frida/build/frida-android-arm/bin/frida-server.xz'
           echo ::set-output name=frida_server_android_arm64::'${{ github.workspace }}/frida/build/frida-android-arm64/bin/frida-server.xz'
@@ -493,42 +443,15 @@ jobs:
           git config --global user.name '${{ needs.release.outputs.user_name }}'
           git config --global user.email '${{ needs.release.outputs.user_email }}'
           git clone --recurse-submodules https://github.com/frida/frida
-          cd frida/frida-core
-          git am ../../patch/frida-core/*.patch
-          cd ../
-          make core-linux-x86
-          make core-linux-x86_64
-          make gum-linux-x86
-          make gum-linux-x86_64
+          source scripts/patch_frida.sh
+          source scripts/build_linux.sh
+
       - name: package build result for Linux
         shell: bash
         id: strong_frida_linux
         run: |
           # tree -f frida/build
-          xz frida/build/frida-linux-x86/bin/frida-server
-          xz frida/build/frida-linux-x86_64/bin/frida-server
-          xz frida/build/frida-linux-x86/bin/frida-inject
-          xz frida/build/frida-linux-x86_64/bin/frida-inject
-          xz frida/build/frida-linux-x86/lib/frida-gadget.so
-          xz frida/build/frida-linux-x86_64/lib/frida-gadget.so
-
-          cd ${{ github.workspace }}/frida
-          releng/devkit.py frida-core linux-x86 build/CFrida/linux-x86-core
-          releng/devkit.py frida-core linux-x86_64 build/CFrida/linux-x86_64-core
-          releng/devkit.py frida-gum linux-x86 build/CFrida/linux-x86-gum
-          releng/devkit.py frida-gum linux-x86_64 build/CFrida/linux-x86_64-gum
-          releng/devkit.py frida-gumjs linux-x86 build/CFrida/linux-x86-gumjs
-          releng/devkit.py frida-gumjs linux-x86_64 build/CFrida/linux-x86_64-gumjs
-
-          cd ${{ github.workspace }}
-          cd frida/build/CFrida/linux-x86-core && tar cJf ../linux-x86-core.tar.xz . && cd '${{ github.workspace }}'
-          cd frida/build/CFrida/linux-x86-gum && tar cJf ../linux-x86-gum.tar.xz . && cd '${{ github.workspace }}'
-          cd frida/build/CFrida/linux-x86-gumjs && tar cJf ../linux-x86-gumjs.tar.xz . && cd '${{ github.workspace }}'
-          cd frida/build/CFrida/linux-x86_64-core && tar cJf ../linux-x86_64-core.tar.xz . && cd '${{ github.workspace }}'
-          cd frida/build/CFrida/linux-x86_64-gum && tar cJf ../linux-x86_64-gum.tar.xz . && cd '${{ github.workspace }}'
-          cd frida/build/CFrida/linux-x86_64-gumjs && tar cJf ../linux-x86_64-gumjs.tar.xz . && cd '${{ github.workspace }}'
-
-          # tree -f frida/build/CFrida
+          source scripts/package_linux.sh
 
           echo ::set-output name=frida_server_linux_x86::'${{ github.workspace }}/frida/build/frida-linux-x86/bin/frida-server.xz'
           echo ::set-output name=frida_server_linux_x86_64::'${{ github.workspace }}/frida/build/frida-linux-x86_64/bin/frida-server.xz'
@@ -691,91 +614,21 @@ jobs:
           git config --global user.name '${{ needs.release.outputs.user_name }}'
           git config --global user.email '${{ needs.release.outputs.user_email }}'
           git clone --recurse-submodules https://github.com/frida/frida
-          cd frida/frida-core
-          git am ../../patch/frida-core/*.patch
-          cd ../
-          export MACOS_CERTID='-'
-          export IOS_CERTID='-'
-          make core-macos
-          make core-ios
-          make core-macos-apple_silicon
-          make gadget-macos
-          make gadget-ios
-          make python-macos
-          make tools-macos
-          make node-macos
+          source scripts/patch_frida.sh
+          source scripts/build_macos.sh
+          source scripts/build_ios.sh
 
       - name: package build result for iOS and macOS
         shell: bash
         id: strong_frida_darwin
         run: |
           #tree -f frida/build
-          xz frida/build/frida-macos-x86_64/bin/frida-server
-          xz frida/build/frida-macos-x86_64/bin/frida-inject
-          xz frida/build/frida-macos-x86_64/lib/frida-gadget.dylib
-          xz frida/build/frida-macos-arm64/bin/frida-server
-          xz frida/build/frida-macos-arm64/bin/frida-inject
-          xz frida/build/frida-macos-arm64/lib/frida-gadget.dylib
-          xz frida/build/frida-macos-arm64e/bin/frida-server
-          xz frida/build/frida-macos-arm64e/bin/frida-inject
-          xz frida/build/frida-macos-arm64e/lib/frida-gadget.dylib
-          xz frida/build/frida-macos-universal/lib/frida-gadget.dylib
-          xz frida/build/frida-ios-arm64/bin/frida-inject
-          xz -k frida/build/frida-ios-arm64/bin/frida-server
-          xz frida/build/frida-ios-arm64/lib/frida-gadget.dylib
-          xz frida/build/frida-ios-arm64e/bin/frida-inject
-          xz -k frida/build/frida-ios-arm64e/bin/frida-server
-          xz frida/build/frida-ios-arm64e/lib/frida-gadget.dylib
-          xz frida/build/frida-ios-universal/lib/frida-gadget.dylib
-
-          cd ${{ github.workspace }}/frida
-          releng/devkit.py frida-core macos-x86_64 build/CFrida/macos-x86_64-core
-          releng/devkit.py frida-core macos-arm64 build/CFrida/macos-arm64-core
-          releng/devkit.py frida-core macos-arm64e build/CFrida/macos-arm64e-core
-          releng/devkit.py frida-core ios-arm64 build/CFrida/ios-arm64-core
-          releng/devkit.py frida-core ios-arm64e build/CFrida/ios-arm64e-core
-          releng/devkit.py frida-gum macos-x86_64 build/CFrida/macos-x86_64-gum
-          releng/devkit.py frida-gum macos-arm64 build/CFrida/macos-arm64-gum
-          releng/devkit.py frida-gum macos-arm64e build/CFrida/macos-arm64e-gum
-          releng/devkit.py frida-gum ios-arm64 build/CFrida/ios-arm64-gum
-          releng/devkit.py frida-gum ios-arm64e build/CFrida/ios-arm64e-gum
-          releng/devkit.py frida-gumjs macos-x86_64 build/CFrida/macos-x86_64-gumjs
-          releng/devkit.py frida-gumjs macos-arm64 build/CFrida/macos-arm64-gumjs
-          releng/devkit.py frida-gumjs macos-arm64e build/CFrida/macos-arm64e-gumjs
-          releng/devkit.py frida-gumjs ios-arm64 build/CFrida/ios-arm64-gumjs
-          releng/devkit.py frida-gumjs ios-arm64e build/CFrida/ios-arm64e-gumjs
-
-          releng/devkit.py frida-core macos-x86_64 frida-swift/CFrida/
-          cd frida-swift && xcodebuild -project Frida.xcodeproj -target Frida ARCHS=x86_64 ONLY_ACTIVE_ARCH=YES  -configuration Release
-          cd ${{ github.workspace }}/frida/frida-swift/build/Release && tar cJf ../frida-swift-macos-universal.tar.xz . && cd '${{ github.workspace }}'
+          source scripts/package_macos.sh
+          source scripts/package_ios.sh
 
           echo ::set-output name=frida_swift_macos_universal::${{ github.workspace }}/frida/frida-swift/build/frida-swift-macos-universal.tar.xz
-
-          FRIDA_VERSION='${{ needs.release.outputs.frida_version }}' FRIDA_TOOLCHAIN='${{ github.workspace }}/frida/build/toolchain-macos-x86_64' ${{ github.workspace }}/frida/frida-core/tools/package-server.sh ${{ github.workspace }}/frida/build/frida-ios-arm64/bin/frida-server ${{ github.workspace }}/frida/build/frida_iphoneos-arm.deb
-          FRIDA_VERSION='${{ needs.release.outputs.frida_version }}' FRIDA_TOOLCHAIN='${{ github.workspace }}/frida/build/toolchain-macos-x86_64' ${{ github.workspace }}/frida/frida-core/tools/package-server.sh ${{ github.workspace }}/frida/build/frida-ios-arm64e/bin/frida-server ${{ github.workspace }}/frida/build/frida64_iphoneos-arm.deb
           echo ::set-output name=frida_server_ios_deb_arm64::${{ github.workspace }}/frida/build/frida_iphoneos-arm.deb
           echo ::set-output name=frida_server_ios_deb_arm64e::${{ github.workspace }}/frida/build/frida64_iphoneos-arm.deb
-
-          cd ${{ github.workspace }}
-          cd frida/build/CFrida/macos-x86_64-core && tar cJf ../macos-x86_64-core.tar.xz . && cd '${{ github.workspace }}'
-          cd frida/build/CFrida/macos-x86_64-gum && tar cJf ../macos-x86_64-gum.tar.xz . && cd '${{ github.workspace }}'
-          cd frida/build/CFrida/macos-x86_64-gumjs && tar cJf ../macos-x86_64-gumjs.tar.xz . && cd '${{ github.workspace }}'
-
-          cd frida/build/CFrida/macos-arm64-core && tar cJf ../macos-arm64-core.tar.xz . && cd '${{ github.workspace }}'
-          cd frida/build/CFrida/macos-arm64-gum && tar cJf ../macos-arm64-gum.tar.xz . && cd '${{ github.workspace }}'
-          cd frida/build/CFrida/macos-arm64-gumjs && tar cJf ../macos-arm64-gumjs.tar.xz . && cd '${{ github.workspace }}'
-
-          cd frida/build/CFrida/macos-arm64e-core && tar cJf ../macos-arm64e-core.tar.xz . && cd '${{ github.workspace }}'
-          cd frida/build/CFrida/macos-arm64e-gum && tar cJf ../macos-arm64e-gum.tar.xz . && cd '${{ github.workspace }}'
-          cd frida/build/CFrida/macos-arm64e-gumjs && tar cJf ../macos-arm64e-gumjs.tar.xz . && cd '${{ github.workspace }}'
-
-          cd frida/build/CFrida/ios-arm64-core && tar cJf ../ios-arm64-core.tar.xz . && cd '${{ github.workspace }}'
-          cd frida/build/CFrida/ios-arm64-gum && tar cJf ../ios-arm64-gum.tar.xz . && cd '${{ github.workspace }}'
-          cd frida/build/CFrida/ios-arm64-gumjs && tar cJf ../ios-arm64-gumjs.tar.xz . && cd '${{ github.workspace }}'
-
-          cd frida/build/CFrida/ios-arm64e-core && tar cJf ../ios-arm64e-core.tar.xz . && cd '${{ github.workspace }}'
-          cd frida/build/CFrida/ios-arm64e-gum && tar cJf ../ios-arm64e-gum.tar.xz . && cd '${{ github.workspace }}'
-          cd frida/build/CFrida/ios-arm64e-gumjs && tar cJf ../ios-arm64e-gumjs.tar.xz . && cd '${{ github.workspace }}'
 
           echo ::set-output name=frida_server_macos_x86_64::'${{ github.workspace }}/frida/build/frida-macos-x86_64/bin/frida-server.xz'
           echo ::set-output name=frida_inject_macos_x86_64::'${{ github.workspace }}/frida/build/frida-macos-x86_64/bin/frida-inject.xz'
@@ -818,7 +671,6 @@ jobs:
           echo ::set-output name=frida_core_ios_arm64e::'${{ github.workspace }}/frida/build/CFrida/ios-arm64e-core.tar.xz'
           echo ::set-output name=frida_gum_ios_arm64e::'${{ github.workspace }}/frida/build/CFrida/ios-arm64e-gum.tar.xz'
           echo ::set-output name=frida_gumjs_ios_arm64e::'${{ github.workspace }}/frida/build/CFrida/ios-arm64e-gumjs.tar.xz'
-
 
       - name: Upload macOS x86_64 frida-server for strong-frida
         uses: actions/upload-release-asset@v1.0.2
@@ -1149,4 +1001,3 @@ jobs:
           asset_path: '${{ steps.strong_frida_darwin.outputs.frida_swift_macos_universal }}'
           asset_name: 'frida-swift-${{ needs.release.outputs.frida_version }}-macos-universal.tar.xz'
           asset_content_type: application/octet-stream
-

@@ -1,5 +1,9 @@
 # strong-frida Change Log
 
+## version 1.12
+
+- add support for frida v14.2.11 build.
+
 ## version 1.11
 
 - upgrade linux/android build runner to Ubuntu20.04.

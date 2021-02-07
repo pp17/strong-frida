@@ -1,5 +1,15 @@
 # strong-frida Change Log
 
+## version 1.13
+
+- add support for linux arm64 frida build.
+
+- add support for frida-python build.
+
+- add support for frida-tools build.
+
+- add support for frida-node build.
+
 ## version 1.12
 
 - add support for frida v14.2.11 build.

@@ -1,14 +1,6 @@
 # strong-frida
 
-**make frida strong, bypass frida detection.**
-
-build [frida](https://github.com/frida/frida) with github actions.
-
-![strong-frida build](https://github.com/feicong/strong-frida/workflows/strong-frida%20build/badge.svg)
-
-## Downloads
-
-[https://github.com/feicong/strong-frida/releases](https://github.com/feicong/strong-frida/releases)
+make frida strong, bypass frida detection.
 
 ## Anti Frida tricks
 
@@ -16,7 +8,7 @@ build [frida](https://github.com/frida/frida) with github actions.
 
 ## Features
 
-patch frida fingerprint from frida-core.
+patch files from @hluwa. [here](patch/frida-core)
 
 ```
 $ tree patch/frida-core/

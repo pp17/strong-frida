@@ -1,0 +1,81 @@
+From b639c9afebeec2ee4a0517a361e80612abe97633 Mon Sep 17 00:00:00 2001
+From: feicong <fei_cong@gmail.com>
+Date: Tue, 9 Feb 2021 04:08:31 +0000
+Subject: [PATCH] 'support_win_build'
+
+---
+ releng/frida-deps.vcxproj | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/releng/frida-deps.vcxproj b/releng/frida-deps.vcxproj
+index f2cbd75..1ee1f26 100644
+--- a/releng/frida-deps.vcxproj
++++ b/releng/frida-deps.vcxproj
+@@ -75,7 +75,7 @@
+     <CustomBuild Include="generate-version-header.py">
+       <FileType>Document</FileType>
+       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+-"$(ProjectDir)generate-version-header.py" "$(SolutionDir)build\tmp-windows\frida-version.h" || exit 1
++py -3 "$(ProjectDir)generate-version-header.py" "$(SolutionDir)build\tmp-windows\frida-version.h" || exit 1
+ REM. &gt; "$(IntDir)frida-version.stamp"
+ </Command>
+       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Generating frida-version.h</Message>
+@@ -83,7 +83,7 @@ REM. &gt; "$(IntDir)frida-version.stamp"
+       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir).git\refs\heads\master</AdditionalInputs>
+       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
+       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+-"$(ProjectDir)generate-version-header.py" "$(SolutionDir)build\tmp-windows\frida-version.h" || exit 1
++py -3 "$(ProjectDir)generate-version-header.py" "$(SolutionDir)build\tmp-windows\frida-version.h" || exit 1
+ REM. &gt; "$(IntDir)frida-version.stamp"
+ </Command>
+       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Generating frida-version.h</Message>
+@@ -91,7 +91,7 @@ REM. &gt; "$(IntDir)frida-version.stamp"
+       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir).git\refs\heads\master</AdditionalInputs>
+       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
+       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+-"$(ProjectDir)generate-version-header.py" "$(SolutionDir)build\tmp-windows\frida-version.h" || exit 1
++py -3 "$(ProjectDir)generate-version-header.py" "$(SolutionDir)build\tmp-windows\frida-version.h" || exit 1
+ REM. &gt; "$(IntDir)frida-version.stamp"
+ </Command>
+       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generating frida-version.h</Message>
+@@ -99,7 +99,7 @@ REM. &gt; "$(IntDir)frida-version.stamp"
+       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir).git\refs\heads\master</AdditionalInputs>
+       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+-"$(ProjectDir)generate-version-header.py" "$(SolutionDir)build\tmp-windows\frida-version.h" || exit 1
++py -3 "$(ProjectDir)generate-version-header.py" "$(SolutionDir)build\tmp-windows\frida-version.h" || exit 1
+ REM. &gt; "$(IntDir)frida-version.stamp"
+ </Command>
+       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generating frida-version.h</Message>
+@@ -166,20 +166,20 @@ echo &gt; "$(IntDir)windows-node-modules.stamp"</Command>
+       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Checking prebuilt dependencies</Message>
+       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)deps.stamp;%(Outputs)</Outputs>
+       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)deps.mk;$(ProjectDir)wget.exe;%(AdditionalInputs)</AdditionalInputs>
+-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(ProjectDir)deps.py" sync toolchain windows-x86 "$(ProjectDir)..\build\toolchain-windows" || exit 1
+-"$(ProjectDir)deps.py" sync sdk windows-any "$(ProjectDir)..\build\sdk-windows" || exit 1
++      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">py -3 "$(ProjectDir)deps.py" sync toolchain windows-x86 "$(ProjectDir)..\build\toolchain-windows" || exit 1
++py -3 "$(ProjectDir)deps.py" sync sdk windows-any "$(ProjectDir)..\build\sdk-windows" || exit 1
+ echo &gt; "$(IntDir)deps.stamp"
+ </Command>
+-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(ProjectDir)deps.py" sync toolchain windows-x86 "$(ProjectDir)..\build\toolchain-windows" || exit 1
+-"$(ProjectDir)deps.py" sync sdk windows-any "$(ProjectDir)..\build\sdk-windows" || exit 1
++      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">py -3 "$(ProjectDir)deps.py" sync toolchain windows-x86 "$(ProjectDir)..\build\toolchain-windows" || exit 1
++py -3 "$(ProjectDir)deps.py" sync sdk windows-any "$(ProjectDir)..\build\sdk-windows" || exit 1
+ echo &gt; "$(IntDir)deps.stamp"
+ </Command>
+-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(ProjectDir)deps.py" sync toolchain windows-x86 "$(ProjectDir)..\build\toolchain-windows" || exit 1
+-"$(ProjectDir)deps.py" sync sdk windows-any "$(ProjectDir)..\build\sdk-windows" || exit 1
++      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">py -3 "$(ProjectDir)deps.py" sync toolchain windows-x86 "$(ProjectDir)..\build\toolchain-windows" || exit 1
++py -3 "$(ProjectDir)deps.py" sync sdk windows-any "$(ProjectDir)..\build\sdk-windows" || exit 1
+ echo &gt; "$(IntDir)deps.stamp"
+ </Command>
+-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(ProjectDir)deps.py" sync toolchain windows-x86 "$(ProjectDir)..\build\toolchain-windows" || exit 1
+-"$(ProjectDir)deps.py" sync sdk windows-any "$(ProjectDir)..\build\sdk-windows" || exit 1
++      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">py -3 "$(ProjectDir)deps.py" sync toolchain windows-x86 "$(ProjectDir)..\build\toolchain-windows" || exit 1
++py -3 "$(ProjectDir)deps.py" sync sdk windows-any "$(ProjectDir)..\build\sdk-windows" || exit 1
+ echo &gt; "$(IntDir)deps.stamp"
+ </Command>
+     </CustomBuild>
+-- 
+2.30.0.windows.2
+

@@ -1,5 +1,9 @@
 # strong-frida Change Log
 
+## version 1.14
+
+- add support for windows frida build.
+
 ## version 1.13
 
 - add support for linux arm64 frida build.

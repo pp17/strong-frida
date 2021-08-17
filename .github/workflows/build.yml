@@ -1,9 +1,7 @@
-name: strong-frida build
+name: build
 
 on:
-  push:
-    paths:
-    - VERSION
+  workflow_dispatch:
 
 jobs:
   release:
@@ -1178,3 +1176,182 @@ jobs:
           asset_name: 'frida-v${{ needs.release.outputs.frida_version }}-node-v83-darwin-x64.tar.gz'
           asset_content_type: application/octet-stream
 
+
+  windows_build:
+    runs-on: windows-latest
+    needs: release
+
+    steps:
+      - uses: actions/checkout@v2.3.4
+
+      - uses: actions/setup-node@v2.1.4
+        with:
+          node-version: '14'
+
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Setup MSBuild
+        id: setup_msbuild
+        uses: microsoft/setup-msbuild@v1.0.2
+
+      - name: echo msbuild path
+        run: |
+          echo "${{ steps.setup_msbuild.outputs.msbuildPath }}"
+          msbuild -version
+
+      - name: build frida for Windows
+        run: |
+          git config --global user.name '${{ needs.release.outputs.user_name }}'
+          git config --global user.email '${{ needs.release.outputs.user_email }}'
+          git clone --recurse-submodules https://github.com/frida/frida
+          pwsh .\scripts\patch_windows.ps1
+          pwsh .\scripts\build_windows.ps1
+
+      - name: package frida for Windows
+        id: strong_frida_windows
+        shell: pwsh
+        run: |
+          pwsh .\scripts\package_windows.ps1
+
+      - name: Upload Windows x86_64 frida-server for strong-frida
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: '${{ needs.release.outputs.upload_url }}'
+          asset_path: '${{ github.workspace }}\frida\build\frida-server-x86_64.exe.xz'
+          asset_name: 'frida-server-${{ needs.release.outputs.frida_version }}-windows-x86_64.exe.xz'
+          asset_content_type: application/octet-stream
+
+      - name: Upload Windows x86_64 frida-gadget for strong-frida
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: '${{ needs.release.outputs.upload_url }}'
+          asset_path: '${{ github.workspace }}\frida\build\frida-gadget-x86_64.dll.xz'
+          asset_name: 'frida-gadget-${{ needs.release.outputs.frida_version }}-windows-x86_64.dll.xz'
+          asset_content_type: application/octet-stream
+
+      - name: Upload Windows x86 frida-server for strong-frida
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: '${{ needs.release.outputs.upload_url }}'
+          asset_path: '${{ github.workspace }}\frida\build\frida-server-x86.exe.xz'
+          asset_name: 'frida-server-${{ needs.release.outputs.frida_version }}-windows-x86.exe.xz'
+          asset_content_type: application/octet-stream
+
+      - name: Upload Windows x86 frida-gadget for strong-frida
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: '${{ needs.release.outputs.upload_url }}'
+          asset_path: '${{ github.workspace }}\frida\build\frida-gadget-x86.dll.xz'
+          asset_name: 'frida-gadget-${{ needs.release.outputs.frida_version }}-windows-x86.dll.xz'
+          asset_content_type: application/octet-stream
+
+      - name: Upload Windows x86_64 frida-core-devkit for strong-frida
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: '${{ needs.release.outputs.upload_url }}'
+          asset_path: '${{ github.workspace }}\frida\build\CFrida\windows-x86_64-core.exe'
+          asset_name: 'frida-core-devkit-${{ needs.release.outputs.frida_version }}-windows-x86_64.exe'
+          asset_content_type: application/octet-stream
+
+      - name: Upload Windows x86_64 frida-gum-devkit for strong-frida
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: '${{ needs.release.outputs.upload_url }}'
+          asset_path: '${{ github.workspace }}\frida\build\CFrida\windows-x86_64-gum.exe'
+          asset_name: 'frida-gum-devkit-${{ needs.release.outputs.frida_version }}-windows-x86_64.exe'
+          asset_content_type: application/octet-stream
+
+      - name: Upload Windows x86_64 frida-gumjs-devkit for strong-frida
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: '${{ needs.release.outputs.upload_url }}'
+          asset_path: '${{ github.workspace }}\frida\build\CFrida\windows-x86_64-gumjs.exe'
+          asset_name: 'frida-gumjs-devkit-${{ needs.release.outputs.frida_version }}-windows-x86_64.exe'
+          asset_content_type: application/octet-stream
+
+      - name: Upload Windows x86 frida-core-devkit for strong-frida
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: '${{ needs.release.outputs.upload_url }}'
+          asset_path: '${{ github.workspace }}\frida\build\CFrida\windows-x86-core.exe'
+          asset_name: 'frida-core-devkit-${{ needs.release.outputs.frida_version }}-windows-x86.exe'
+          asset_content_type: application/octet-stream
+
+      - name: Upload Windows x86 frida-gum-devkit for strong-frida
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: '${{ needs.release.outputs.upload_url }}'
+          asset_path: '${{ github.workspace }}\frida\build\CFrida\windows-x86-gum.exe'
+          asset_name: 'frida-gum-devkit-${{ needs.release.outputs.frida_version }}-windows-x86.exe'
+          asset_content_type: application/octet-stream
+
+      - name: Upload Windows x86 frida-gumjs-devkit for strong-frida
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: '${{ needs.release.outputs.upload_url }}'
+          asset_path: '${{ github.workspace }}\frida\build\CFrida\windows-x86-gumjs.exe'
+          asset_name: 'frida-gumjs-devkit-${{ needs.release.outputs.frida_version }}-windows-x86.exe'
+          asset_content_type: application/octet-stream
+
+      - name: Upload Windows x86_64 frida-node v64 for strong-frida
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: '${{ needs.release.outputs.upload_url }}'
+          asset_path: '${{ github.workspace }}\frida\frida-node\prebuilds\frida-node-v64-win32-x64.tar.gz'
+          asset_name: 'frida-v${{ needs.release.outputs.frida_version }}-node-v64-win32-x64.tar.gz'
+          asset_content_type: application/octet-stream
+
+      - name: Upload Windows x86_64 frida-node v72 for strong-frida
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: '${{ needs.release.outputs.upload_url }}'
+          asset_path: '${{ github.workspace }}\frida\frida-node\prebuilds\frida-node-v72-win32-x64.tar.gz'
+          asset_name: 'frida-v${{ needs.release.outputs.frida_version }}-node-v72-win32-x64.tar.gz'
+          asset_content_type: application/octet-stream
+
+      - name: Upload Windows x86_64 frida-node v83 for strong-frida
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: '${{ needs.release.outputs.upload_url }}'
+          asset_path: '${{ github.workspace }}\frida\frida-node\prebuilds\frida-node-v83-win32-x64.tar.gz'
+          asset_name: 'frida-v${{ needs.release.outputs.frida_version }}-node-v83-win32-x64.tar.gz'
+          asset_content_type: application/octet-stream
+
+      - name: Upload Windows x86_64 frida-node electron for strong-frida
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: '${{ needs.release.outputs.upload_url }}'
+          asset_path: '${{ github.workspace }}\frida\frida-node\prebuilds\frida-electron-v85-win32-x64.tar.gz'
+          asset_name: 'frida-v${{ needs.release.outputs.frida_version }}-electron-v85-win32-x64.tar.gz'
+          asset_content_type: application/octet-stream

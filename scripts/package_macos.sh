@@ -9,6 +9,7 @@ xz build/frida-macos-arm64e/bin/frida-server
 xz build/frida-macos-arm64e/bin/frida-inject
 xz build/frida-macos-arm64e/lib/frida-gadget.dylib
 xz build/frida-macos-universal/lib/frida-gadget.dylib
+
 releng/devkit.py frida-core macos-x86_64 build/CFrida/macos-x86_64-core
 releng/devkit.py frida-core macos-arm64 build/CFrida/macos-arm64-core
 releng/devkit.py frida-core macos-arm64e build/CFrida/macos-arm64e-core

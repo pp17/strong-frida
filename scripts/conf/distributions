@@ -1,0 +1,6 @@
+Origin: Frida
+Codename: stable
+Architectures: iphoneos-arm
+Components: main
+UDebComponents: main
+Description: Inject JavaScript to explore iOS apps over USB.

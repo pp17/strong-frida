@@ -1,14 +1,20 @@
 pushd frida
 xz build/frida-macos-x86_64/bin/frida-server
 xz build/frida-macos-x86_64/bin/frida-inject
-xz build/frida-macos-x86_64/lib/frida-gadget.dylib
+xz build/frida-macos-x86_64/bin/frida-portal
+xz build/frida-macos-x86_64/bin/gum-graft
+xz build/frida-macos-x86_64/lib/frida/frida-gadget.dylib
 xz build/frida-macos-arm64/bin/frida-server
 xz build/frida-macos-arm64/bin/frida-inject
-xz build/frida-macos-arm64/lib/frida-gadget.dylib
+xz build/frida-macos-arm64/bin/frida-portal
+xz build/frida-macos-arm64/bin/gum-graft
+xz build/frida-macos-arm64/lib/frida/frida-gadget.dylib
 xz build/frida-macos-arm64e/bin/frida-server
 xz build/frida-macos-arm64e/bin/frida-inject
-xz build/frida-macos-arm64e/lib/frida-gadget.dylib
-xz build/frida-macos-universal/lib/frida-gadget.dylib
+xz build/frida-macos-arm64e/bin/frida-portal
+xz build/frida-macos-arm64e/bin/gum-graft
+xz build/frida-macos-arm64e/lib/frida/frida-gadget.dylib
+xz build/frida-macos-universal/lib/frida/frida-gadget.dylib
 
 releng/devkit.py frida-core macos-x86_64 build/CFrida/macos-x86_64-core
 releng/devkit.py frida-core macos-arm64 build/CFrida/macos-arm64-core
@@ -41,3 +47,5 @@ cd frida/build/CFrida/macos-arm64-gumjs && tar cJf ../macos-arm64-gumjs.tar.xz .
 cd frida/build/CFrida/macos-arm64e-core && tar cJf ../macos-arm64e-core.tar.xz . && cd ../../../..
 cd frida/build/CFrida/macos-arm64e-gum && tar cJf ../macos-arm64e-gum.tar.xz . && cd ../../../..
 cd frida/build/CFrida/macos-arm64e-gumjs && tar cJf ../macos-arm64e-gumjs.tar.xz . && cd ../../../..
+
+cd frida/build/frida-macos-x86_64/lib/qt5/qml && tar cJf ../frida-qml-macos-x86_64.tar.xz . && cd ../../../../../..

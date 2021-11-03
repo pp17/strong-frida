@@ -1,0 +1,14 @@
+FROM arm32v7/ubuntu:20.04
+
+COPY qemu-arm-static /usr/bin
+
+RUN apt-get update;\
+    apt-get install -y python3 python3-pip python3-dev build-essential git wget xz-utils ninja-build meson flex bison
+
+RUN wget --no-check-certificate https://nodejs.org/download/release/v14.17.0/node-v14.17.0-linux-armv7l.tar.xz;\
+    tar xvJf node-v14.17.0-linux-armv7l.tar.xz;\
+    rm node-v14.17.0-linux-armv7l.tar.xz
+
+ENV PATH "/node-v14.17.0-linux-armv7l/bin:$PATH"
+
+CMD ["bash"]
